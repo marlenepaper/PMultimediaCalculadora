@@ -15,8 +15,8 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="bottom"
-        android:paddingStart="32dp"
-        android:paddingEnd="32dp"
+        android:paddingStart="28dp"
+        android:paddingEnd="28dp"
         android:paddingBottom="32dp"
         >
 
