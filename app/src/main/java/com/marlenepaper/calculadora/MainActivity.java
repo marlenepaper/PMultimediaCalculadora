@@ -13,6 +13,9 @@ import androidx.core.view.WindowInsetsCompat;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private double resultado=0;
     private boolean esElUltimoInputOperador=false; //no se ha ingresado un operador
     private boolean esElUltimoInputPunto=false; //no se ha ingresado un punto
-    private int exponencial = 0;
+    private int exponente = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,13 +95,16 @@ public class MainActivity extends AppCompatActivity {
             esElUltimoInputPunto=false;
             inputExpresionMatematica.append(input);
 
-            String[] partes = inputExpresionMatematica.toString().split("[+\\-*/]");
-            String ultimoNumero = partes[partes.length - 1];
+            String[] cifra = inputExpresionMatematica.toString().split("[+\\-*/]");
+            String ultimaCifra = cifra[cifra.length - 1];
 
-            if (ultimoNumero.length() > 9) {
-                exponencial = ultimoNumero.length() - 9;
-                String numeroFormateado = ultimoNumero.substring(0, 9) + "e" +(9 + exponencial);
-                inputExpresionMatematica.setLength(inputExpresionMatematica.length() - ultimoNumero.length());
+            if (ultimaCifra.length() > 9) {
+                BigDecimal numero = new BigDecimal(ultimaCifra);
+
+                DecimalFormat formato = new DecimalFormat("0.###E0");
+                String numeroFormateado = formato.format(numero);
+
+                inputExpresionMatematica.setLength(inputExpresionMatematica.length() - ultimaCifra.length());
                 inputExpresionMatematica.append(numeroFormateado);
             }
             impresionDeExpresionMatematica.setText(inputExpresionMatematica.toString());
@@ -137,19 +143,21 @@ public class MainActivity extends AppCompatActivity {
                 exp = exp.replace(",", ".");
 
                 double resultado = evaluarExpresion(exp);
-                String resultadoFormateado;
+                String resultadoConExponente;
 
+                BigDecimal resultadoBD = new BigDecimal(resultado);
 
-                if (String.valueOf((int) resultado).length() > 9) {
-                    resultadoFormateado = String.format("%.2e", resultado);
+                if (resultadoBD.toString().length() > 9) {
+                    DecimalFormat formato = new DecimalFormat("0.###E0");
+                    resultadoConExponente = formato.format(resultadoBD);
                 } else {
-                    resultadoFormateado = String.format("%.2f", resultado);
+                    resultadoConExponente = String.format("%.2f", resultadoBD.doubleValue());
                 }
 
-                impresionResultado.setText(resultadoFormateado);
+                impresionResultado.setText(resultadoConExponente);
                 inputExpresionMatematica.setLength(0);
-                inputExpresionMatematica.append(resultadoFormateado);
-                impresionDeExpresionMatematica.setText(resultadoFormateado);
+                inputExpresionMatematica.append(resultadoConExponente);
+                impresionDeExpresionMatematica.setText(resultadoConExponente);
 
             } catch (Exception e) {
                 impresionResultado.setText("Error");
