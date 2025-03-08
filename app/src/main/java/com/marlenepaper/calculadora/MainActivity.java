@@ -143,9 +143,9 @@ public class MainActivity extends AppCompatActivity {
                 exp = exp.replace(",", ".");
 
                 double resultado = evaluarExpresion(exp);
-                String resultadoConExponente;
-
                 BigDecimal resultadoBD = new BigDecimal(resultado);
+
+                String resultadoConExponente;
 
                 if (resultadoBD.toString().length() > 9) {
                     DecimalFormat formato = new DecimalFormat("0.###E0");
